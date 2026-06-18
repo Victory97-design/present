@@ -1,0 +1,643 @@
+\<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia Hub / Graphics & File Formats Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg: #03060f;
+            --sidebar-bg: #060a15;
+            --panel-bg: #09101f;
+            --card-inner: #0f1a30;
+            --border: #152642;
+            --border-glow: #1e3b68;
+            
+            /* High-Aesthetic Color Palette */
+            --cyan-neon: #00f2fe;
+            --teal-neon: #4facfe;
+            --orange-neon: #ff9900;
+            --purple-neon: #b927fc;
+            --pink-neon: #ff007f;
+            --text-main: #f1f5f9;
+            --text-muted: #526882;
+            --glow-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            box-sizing: border-box;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        aside {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            padding: 0 24px;
+            margin-bottom: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(to right, var(--cyan-neon), var(--teal-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-logo::before { content: '❖'; color: var(--cyan-neon); text-shadow: var(--glow-shadow); }
+
+        .nav-group { display: flex; flex-direction: column; gap: 4px; }
+
+        .nav-item {
+            padding: 12px 24px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover { color: #cbd5e1; background: rgba(79, 172, 254, 0.02); }
+        
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.06) 0%, rgba(3, 6, 15, 0) 100%);
+            color: var(--cyan-neon);
+            border-left-color: var(--cyan-neon);
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+        }
+
+        /* --- MAIN DASHBOARD FRAME --- */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        header {
+            height: 55px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            background: rgba(6, 10, 21, 0.7);
+            flex-shrink: 0;
+        }
+
+        .breadcrumb {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .breadcrumb span { color: var(--cyan-neon); text-shadow: var(--glow-shadow); }
+
+        /* Flexible adaptive container architecture */
+        .workspace-grid {
+            padding: 24px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .tab-pane {
+            display: none;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 24px;
+            width: 100%;
+        }
+        .tab-pane.active { display: grid; }
+
+        .left-flow, .right-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* --- THEMED PANEL CARDS --- */
+        .panel-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s ease;
+        }
+        .panel-card:hover { border-color: var(--border-glow); }
+
+        .card-tag {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        h1.hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin: 0 0 6px 0;
+            background: linear-gradient(135deg, #ffffff 30%, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc { color: #7e94b2; font-size: 0.92rem; margin: 0 0 16px 0; font-weight: 500; }
+        
+        h2.section-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--cyan-neon);
+            margin: 0 0 18px 0;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .header-pill {
+            background: rgba(0, 242, 254, 0.04);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--cyan-neon);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1.5px;
+            display: inline-block;
+            margin-bottom: 16px;
+            align-self: flex-start;
+            text-transform: uppercase;
+        }
+
+        p.body-text { line-height: 1.65; color: #9cb3ce; font-size: 0.98rem; margin: 0; }
+
+        /* Multi-Color Highlighter Framework */
+        .hl-cyan { color: var(--cyan-neon); font-weight: 600; }
+        .hl-orange { color: var(--orange-neon); font-weight: 600; }
+        .hl-pink { color: var(--pink-neon); font-weight: 600; }
+        .hl-purple { color: var(--purple-neon); font-weight: 600; }
+
+        /* --- BULLET LIST DESIGN --- */
+        ul.bullet-list { list-style: none; padding: 0; margin: 0; }
+        ul.bullet-list li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 14px;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #b4c6ef;
+        }
+        ul.bullet-list li:last-child { margin-bottom: 0; }
+        ul.bullet-list li::before {
+            content: '>'; position: absolute; left: 0; top: 1px;
+            color: var(--cyan-neon); font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 0.85rem;
+        }
+        ul.bullet-list li strong { color: #ffffff; font-weight: 600; }
+
+        /* --- DYNAMIC VIEWPORT ANIMATION CANVAS --- */
+        .engine-viewport {
+            height: 140px;
+            background: #04070e;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viewport-grid-lines {
+            position: absolute; width: 100%; height: 100%;
+            background-size: 20px 20px;
+            background-image: linear-gradient(to right, rgba(21, 38, 66, 0.18) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(21, 38, 66, 0.18) 1px, transparent 1px);
+        }
+
+        .engine-tag {
+            position: absolute; bottom: 10px; right: 12px;
+            font-family: 'Orbitron', sans-serif; font-size: 0.58rem;
+            letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase;
+        }
+
+        /* --- GRAPHICS ENGINES --- */
+        .hud-display {
+            font-family: 'Orbitron', sans-serif; font-size: 3.2rem; font-weight: 900;
+            background: linear-gradient(to right, var(--cyan-neon), var(--purple-neon), var(--pink-neon));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: textGlitch 4s infinite linear;
+        }
+        @keyframes textGlitch {
+            0%, 100% { transform: scale(1); filter: hue-rotate(0deg); }
+            50% { transform: scale(1.04); filter: hue-rotate(90deg); }
+        }
+
+        .jpg-matrix-mesh {
+            width: 45px; height: 45px; background: var(--orange-neon);
+            box-shadow: 0 0 25px rgba(255, 153, 0, 0.35);
+            animation: jpgMacroBlock 4s infinite steps(1, end);
+        }
+        @keyframes jpgMacroBlock {
+            0%, 100% { transform: scale(1); border-radius: 50%; filter: blur(0); }
+            20% { transform: scale(1.3); border-radius: 8px; }
+            40% { transform: scale(1.8); border-radius: 1px; filter: blur(2px) contrast(2); }
+            70% { transform: scale(1.4); border-radius: 0; }
+        }
+
+        .png-checkerboard {
+            width: 100%; height: 100%; background-color: #03060f;
+            background-image: linear-gradient(45deg, #09101f 25%, transparent 25%), linear-gradient(-45deg, #09101f 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #09101f 75%), linear-gradient(-45deg, transparent 75%, #09101f 75%);
+            background-size: 16px 16px; display: flex; align-items: center; justify-content: center;
+        }
+        .png-alpha-sphere {
+            width: 45px; height: 45px; background: linear-gradient(135deg, var(--cyan-neon), var(--teal-neon));
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.35);
+            border-radius: 50%; animation: pngScanFluid 3.5s infinite ease-in-out;
+        }
+        @keyframes pngScanFluid {
+            0%, 100% { transform: translateX(-45px); clip-path: inset(0 0 0 0); }
+            50% { transform: translateX(45px); clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); }
+        }
+
+        .gif-frame-rig {
+            width: 35px; height: 35px; background: var(--pink-neon);
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.35);
+            animation: gifStepTimeline 1.2s step-end infinite;
+        }
+        @keyframes gifStepTimeline {
+            0% { transform: scale(1); background: var(--pink-neon); border-radius: 2px; }
+            25% { transform: scale(1.2) rotate(45deg); background: var(--purple-neon); border-radius: 50%; }
+            50% { transform: scale(0.85) translateX(20px); background: var(--cyan-neon); border-radius: 6px; }
+            75% { transform: scale(1.1) translateX(-20px); background: var(--teal-neon); border-radius: 0; }
+        }
+
+        .svg-math-canvas {
+            width: 50px; height: 50px; fill: none; stroke: var(--cyan-neon); stroke-width: 3;
+            filter: drop-shadow(0 0 10px var(--cyan-neon));
+            animation: svgMathEngine 4s infinite ease-in-out;
+        }
+        @keyframes svgMathEngine {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.6) rotate(180deg); stroke: var(--purple-neon); }
+        }
+
+        .pdf-layer-rig {
+            width: 75px; height: 100px; background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px;
+            padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;
+            animation: pdfRigidFix 3s infinite ease-in-out;
+        }
+        .pdf-block-element { height: 32px; background: linear-gradient(90deg, #ff3366, #ff007f); border-radius: 2px; }
+        .pdf-row-element { height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 1px; width: 100%; }
+        @keyframes pdfRigidFix {
+            0%, 100% { transform: scale(0.9); }
+            50% { transform: scale(1.05); border-color: var(--pink-neon); }
+        }
+
+        .tiff-depth-rig { position: relative; width: 50px; height: 50px; transform: rotateX(55deg) rotateZ(-45deg); transform-style: preserve-3d; }
+        .tiff-channel {
+            position: absolute; width: 100%; height: 100%; border: 1.5px solid var(--cyan-neon);
+            background: rgba(0, 242, 254, 0.05); border-radius: 4px; animation: tiffSplitStack 3.5s infinite ease-in-out;
+        }
+        .tiff-channel.ch-green { animation-delay: 0.4s; border-color: var(--purple-neon); }
+        .tiff-channel.ch-blue { animation-delay: 0.8s; border-color: var(--pink-neon); }
+        @keyframes tiffSplitStack {
+            0%, 100% { transform: translateZ(0px); opacity: 0.4; }
+            50% { transform: translateZ(22px); opacity: 0.9; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="brand-logo">Multimedia Core</div>
+        <div class="nav-group">
+            <div class="nav-item active" onclick="navigateHub('overview')">Overview</div>
+            <div class="nav-item" onclick="navigateHub('jpg')">JPG Specification</div>
+            <div class="nav-item" onclick="navigateHub('png')">PNG Specification</div>
+            <div class="nav-item" onclick="navigateHub('gif')">GIF Specification</div>
+            <div class="nav-item" onclick="navigateHub('svg')">SVG Specification</div>
+            <div class="nav-item" onclick="navigateHub('pdf')">PDF Specification</div>
+            <div class="nav-item" onclick="navigateHub('tiff')">TIFF Specification</div>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div class="breadcrumb">Systems / Core Guidance / <span id="active-crumb">Overview</span></div>
+        </header>
+
+        <div class="workspace-grid">
+
+            <div id="overview" class="tab-pane active">
+                <div class="left-flow">
+                    <div class="panel-card">
+                        <span class="card-tag">SYSTEM INTRODUCTION</span>
+                        <h1 class="hero-title">Graphics & File Formats</h1>
+                        <p class="hero-desc">The primary interface framework for visual rendering algorithms.</p>
+                        <div class="engine-viewport">
+                            <div class="viewport-grid-lines"></div>
+                            <div class="hud-display">GFX</div>
+                            <span class="engine-tag">Core Engine Active</span>
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <h2 class="section-header">Definition Architecture</h2>
+                        <p class="body-text">Graphics file format is a method of <span class="hl-cyan">encoding</span> and <span class="hl-cyan">compressing</span> image data for storage in a computer's file, allowing the image to be opened and displayed seamlessly across different programs.</p>
+                    </div>
+                </div>
+                <div class="right-flow">
+                    <div class="panel-card">
+                        <span class="header-pill">Operational Overview</span>
+                        <h2 class="section-header">Visual Vectors Map</h2>
+                        <p class="body-text" style="margin-bottom: 14px;">Digital assets leverage specialized data array configurations depending on performance constraints, bandwidth metrics, and asset rendering requirements.</p>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-cyan">Raster Structures:</strong> Grid systems deploying fixed spatial pixel blocks containing exact color values.</li>
+                            <li><strong class="hl-pink">Vector Formulations:</strong> Dynamic mathematical coordinates calculating lines, fills, and polygon paths natively.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="jpg" class="tab-pane">
+                <div class="left-flow">
+                    <div class="panel-card">
+                        <span class="card-tag">IMAGE FILE FORMAT SPECIFICATION</span>
+                        <h1 class="hero-title">Joint Photographic Experts Group</h1>
+                        <p class="hero-desc">High-compression lossy standard built for continuous tone images.</p>
+                        <div class="engine-viewport">
+                            <div class="viewport-grid-lines"></div>
+                            <div class="jpg-matrix-mesh"></div>
+                            <span class="engine-tag">Lossy Macroblock Matrix</span>
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <h2 class="section-header">Advantages of JPG</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-cyan">High compression rate:</strong> JPG supports strong compression which reduces file size significantly so that it is easy to share by email or the internet.</li>
+                            <li><strong class="hl-cyan">Good image quality:</strong> It maintains acceptable image quality even after compression, so it is suitable for the photographs and realistic images.</li>
+                            <li><strong class="hl-cyan">Fast loading time:</strong> Smaller file size helps images load quickly on websites.</li>
+                            <li><strong class="hl-cyan">Millions of colors supported:</strong> It supports 24-bit color, ideal for detailed images.</li>
+                            <li><strong class="hl-cyan">Easy to use and convert:</strong> It can be easily edited and converted to other formats.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right-flow">
+                    <div class="panel-card" style="border-left: 3px solid var(--orange-neon);">
+                        <span class="header-pill" style="color:var(--orange-neon); border-color: rgba(255,153,0,0.3);">System Constraints</span>
+                        <h2 class="section-header" style="color: var(--orange-neon);">Disadvantages of JPG</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-orange">Lossy compression:</strong> JPG uses lossy compression which reduces image quality when compressed.</li>
+                            <li><strong class="hl-orange">Quality loss on re-saving:</strong> In JPG every time the image is edited and saved, quality degrades further.</li>
+                            <li><strong class="hl-orange">No transparency support:</strong> JPG does not support transparent background unlike PNG.</li>
+                            <li><strong class="hl-orange">Limited editing flexibility:</strong> In JPG once compressed, lost data cannot be recovered.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="png" class="tab-pane">
+                <div class="left-flow">
+                    <div class="panel-card">
+                        <span class="card-tag">IMAGE FILE FORMAT SPECIFICATION</span>
+                        <h1 class="hero-title">Portable Network Graphics</h1>
+                        <p class="hero-desc">Lossless web deployment array engineered to replace legacy raster formats.</p>
+                        <div class="engine-viewport">
+                            <div class="viewport-grid-lines"></div>
+                            <div class="png-checkerboard"><div class="png-alpha-sphere"></div></div>
+                            <span class="engine-tag">Alpha Pass Filter Enabled</span>
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <h2 class="section-header">Advantages of PNG</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-cyan">Lossless compression:</strong> There is no loss of image quality after compression.</li>
+                            <li><strong class="hl-cyan">Supports transparency:</strong> It allows transparent backgrounds.</li>
+                            <li><strong class="hl-cyan">High image quality:</strong> It maintains sharp edges and clear details. This format is best for logos, icons, and text images.</li>
+                            <li><strong class="hl-cyan">Supports millions of colors:</strong> It is supported for detailed graphics and web images.</li>
+                            <li><strong class="hl-cyan">Widely supported:</strong> It is compatible with most browsers and image editing software.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right-flow">
+                    <div class="panel-card" style="border-left: 3px solid var(--orange-neon);">
+                        <span class="header-pill" style="color:var(--orange-neon); border-color: rgba(255,153,0,0.3);">System Constraints</span>
+                        <h2 class="section-header" style="color: var(--orange-neon);">Disadvantages of PNG</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-orange">Large file size:</strong> It is larger than JPEG file due to lossless compression.</li>
+                            <li><strong class="hl-orange">Not ideal for large photographs:</strong> High-quality PNG photos may take up too much storage space.</li>
+                            <li><strong class="hl-orange">Limited support for animation:</strong> Basic PNG does not support animation.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="gif" class="tab-pane">
+                <div class="left-flow">
+                    <div class="panel-card">
+                        <span class="card-tag">IMAGE FILE FORMAT SPECIFICATION</span>
+                        <h1 class="hero-title">Graphics Interchange Format</h1>
+                        <p class="hero-desc">Indexed color bitmap configuration designed for sequence runs.</p>
+                        <div class="engine-viewport">
+                            <div class="viewport-grid-lines"></div>
+                            <div class="gif-frame-rig"></div>
+                            <span class="engine-tag">Indexed Frame Array Loop</span>
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <h2 class="section-header">Advantages of GIF</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-cyan">Supports animation:</strong> We can display simple animated images.</li>
+                            <li><strong class="hl-cyan">Small file size:</strong> It is good for small icons and simple web graphics.</li>
+                            <li><strong class="hl-cyan">Transparency support:</strong> It supports single-color transparency.</li>
+                            <li><strong class="hl-cyan">Widely supported:</strong> It is compatible with almost all the web browsers and devices.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right-flow">
+                    <div class="panel-card" style="border-left: 3px solid var(--orange-neon);">
+                        <span class="header-pill" style="color:var(--orange-neon); border-color: rgba(255,153,0,0.3);">System Constraints</span>
+                        <h2 class="section-header" style="color: var(--orange-neon);">Disadvantages of GIF</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-orange">Limited colors:</strong> It supports only 256 colors, which reduces image quality.</li>
+                            <li><strong class="hl-orange">Lower image quality:</strong> GIF images may look grainy or pixelated.</li>
+                            <li><strong class="hl-orange">No true alpha transparency:</strong> It does not support smooth or semi-transparent backgrounds.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="svg" class="tab-pane">
+                <div class="left-flow">
+                    <div class="panel-card">
+                        <span class="card-tag">IMAGE FILE FORMAT SPECIFICATION</span>
+                        <h1 class="hero-title">Scalable Vector Graphics</h1>
+                        <p class="hero-desc">XML code architecture mapping resolution-independent coordinates.</p>
+                        <div class="engine-viewport">
+                            <div class="viewport-grid-lines"></div>
+                            <svg class="svg-math-canvas" viewBox="0 0 24 24"><polygon points="12,2 22,22 2,22" /></svg>
+                            <span class="engine-tag">Dynamic Calculus Grid</span>
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <h2 class="section-header">Advantages of SVG</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-cyan">Scalable without quality loss:</strong> It can be resized to any size without losing clarity.</li>
+                            <li><strong class="hl-cyan">Small file size:</strong> It is usually smaller than bitmap images for logos and icons.</li>
+                            <li><strong class="hl-cyan">Editable with code:</strong> It can be edited using text editors.</li>
+                            <li><strong class="hl-cyan">Supports animation and interactivity:</strong> It works well with CSS and JavaScript for web animation.</li>
+                            <li><strong class="hl-cyan">High quality for graphics and logos:</strong> It is best for icons, charts, diagrams, and illustrations.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right-flow">
+                    <div class="panel-card" style="border-left: 3px solid var(--orange-neon);">
+                        <span class="header-pill" style="color:var(--orange-neon); border-color: rgba(255,153,0,0.3);">System Constraints</span>
+                        <h2 class="section-header" style="color: var(--orange-neon);">Disadvantages of SVG</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-orange">Not suitable for complex photographs:</strong> It is not ideal for detailed, high-resolution images.</li>
+                            <li><strong class="hl-orange">Can become large for complex designs:</strong> Complex vector graphics may increase file size.</li>
+                            <li><strong class="hl-orange">Requires technical knowledge:</strong> Creating and editing SVG may require knowledge of coding or vector-based tools.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pdf" class="tab-pane">
+                <div class="left-flow">
+                    <div class="panel-card">
+                        <span class="card-tag">IMAGE FILE FORMAT SPECIFICATION</span>
+                        <h1 class="hero-title">Portable Document Format</h1>
+                        <p class="hero-desc">Cross-platform structure built by Adobe for uniform visual display.</p>
+                        <div class="engine-viewport">
+                            <div class="viewport-grid-lines"></div>
+                            <div class="pdf-layer-rig">
+                                <div class="pdf-block-element"></div>
+                                <div class="pdf-row-element"></div>
+                                <div class="pdf-row-element" style="width:70%;"></div>
+                            </div>
+                            <span class="engine-tag">Absolute Matrix Lock</span>
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <h2 class="section-header">Advantages of PDF</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-cyan">Platform independent:</strong> It opens the same on Windows, Mac, Linux, and mobile devices.</li>
+                            <li><strong class="hl-cyan">Preserves formatting:</strong> It maintains font, images, layout, and design exactly as created.</li>
+                            <li><strong class="hl-cyan">Secure and protected:</strong> It can be password-protected and encrypted.</li>
+                            <li><strong class="hl-cyan">Supports multimedia:</strong> It can include text, images, hyperlinks, forms, and even audio and video.</li>
+                            <li><strong class="hl-cyan">Compact file size:</strong> It uses compression to reduce file size.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right-flow">
+                    <div class="panel-card" style="border-left: 3px solid var(--orange-neon);">
+                        <span class="header-pill" style="color:var(--orange-neon); border-color: rgba(255,153,0,0.3);">System Constraints</span>
+                        <h2 class="section-header" style="color: var(--orange-neon);">Disadvantages of PDF</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-orange">Large file size:</strong> PDF files with many images or graphics can become large.</li>
+                            <li><strong class="hl-orange">Compatibility issue with older software:</strong> Some older programs may not support advanced features.</li>
+                            <li><strong class="hl-orange">Not ideal for web content editing:</strong> It is less flexible compared to HTML for online content.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tiff" class="tab-pane">
+                <div class="left-flow">
+                    <div class="panel-card">
+                        <span class="card-tag">IMAGE FILE FORMAT SPECIFICATION</span>
+                        <h1 class="hero-title">Tagged Image File Format</h1>
+                        <p class="hero-desc">High bit-depth raster format optimized for physical printing pipelines.</p>
+                        <div class="engine-viewport">
+                            <div class="viewport-grid-lines"></div>
+                            <div class="tiff-depth-rig">
+                                <div class="tiff-channel ch-blue"></div>
+                                <div class="tiff-channel ch-green"></div>
+                                <div class="tiff-channel"></div>
+                            </div>
+                            <span class="engine-tag">32-Bit Deep Layer Array</span>
+                        </div>
+                    </div>
+                    <div class="panel-card">
+                        <h2 class="section-header">Advantages of TIFF</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-cyan">High image quality:</strong> Lossless format of TIFF preserves all image details. It is ideal for professional photography and printing.</li>
+                            <li><strong class="hl-cyan">Supports multiple layers and pages:</strong> It can store multiple images or pages in a single file.</li>
+                            <li><strong class="hl-cyan">Wide color depth:</strong> It supports millions of colors and high bit depths.</li>
+                            <li><strong class="hl-cyan">Flexible compression options:</strong> It can use lossless compression to reduce file size without quality loss.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right-flow">
+                    <div class="panel-card" style="border-left: 3px solid var(--orange-neon);">
+                        <span class="header-pill" style="color:var(--orange-neon); border-color: rgba(255,153,0,0.3);">System Constraints</span>
+                        <h2 class="section-header" style="color: var(--orange-neon);">Disadvantages of TIFF</h2>
+                        <ul class="bullet-list">
+                            <li><strong class="hl-orange">Large file size:</strong> High-quality TIFF images take up a lot of storage space.</li>
+                            <li><strong class="hl-orange">Not ideal for web use:</strong> It is slow to load and not widely supported on websites.</li>
+                            <li><strong class="hl-orange">Limited compatibility with some software:</strong> Some programs cannot open advanced TIFF features.</li>
+                            <li><strong class="hl-orange">Slow processing:</strong> Editing and transferring large TIFF files can be time-consuming.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function navigateHub(targetTabId) {
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(pane => pane.classList.remove('active'));
+
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => item.classList.remove('active'));
+
+            document.getElementById(targetTabId).classList.add('active');
+
+            const matchString = targetTabId === 'overview' ? 'overview' : targetTabId;
+            const targetBtn = Array.from(items).find(btn => btn.textContent.toLowerCase().includes(matchString));
+            if(targetBtn) targetBtn.classList.add('active');
+
+            const crumb = document.getElementById('active-crumb');
+            crumb.textContent = targetTabId === 'overview' ? 'Overview' : targetTabId.toUpperCase() + ' Specification';
+        }
+    </script>
+</body>
+</html>
